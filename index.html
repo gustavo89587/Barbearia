@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -15,14 +15,30 @@
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <style>
-    /* ================== THEME ================== */
-    :root{
+    /* ========== PALETA POR TEMA (LIGHT DEFAULT) ========== */
+    :root[data-theme="light"]{
+      --bg:#f7f7f9;
+      --card:#ffffff;
+      --card-2:#fafafb;
+      --muted:#6b7280;
+      --text:#0f1115;
+      --red:#ef4444;
+      --red-600:#dc2626;
+      --red-700:#b91c1c;
+      --ring: 0 0 0 .2rem rgba(239,68,68,.22);
+      --shadow: 0 8px 28px rgba(0,0,0,.08);
+      --glass: rgba(255,255,255,.7);
+      --bd: rgba(17,24,39,.08);
+      --success:#16a34a;
+      --warning:#f59e0b;
+    }
+    :root[data-theme="dark"]{
       --bg:#0b0b0c;
       --card:#141417;
       --card-2:#16181b;
       --muted:#a7a7ad;
       --text:#f2f2f5;
-      --red:#ef4444;   /* 500 */
+      --red:#ef4444;
       --red-600:#dc2626;
       --red-700:#b91c1c;
       --ring: 0 0 0 .2rem rgba(239,68,68,.35);
@@ -32,14 +48,12 @@
       --success:#16a34a;
       --warning:#f59e0b;
     }
+
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
       font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      background:
-        radial-gradient(1200px 600px at 10% -10%, rgba(185,28,28,.22), transparent 60%),
-        radial-gradient(1000px 600px at 110% 10%, rgba(220,38,38,.18), transparent 55%),
-        linear-gradient(180deg, #0b0b0c 0%, #0a0a0b 100%);
+      background: var(--bg);
       color:var(--text);
     }
     .container-app{max-width:1100px}
@@ -57,85 +71,99 @@
       background:linear-gradient(180deg, var(--card) 0%, var(--card-2) 100%);
       border:1px solid var(--bd);
       border-radius:16px!important;
-      box-shadow:0 8px 30px rgba(0,0,0,.35);
+      box-shadow:0 8px 30px rgba(0,0,0,.08);
     }
+    [data-theme="dark"] .card{ box-shadow:0 8px 30px rgba(0,0,0,.35); }
     .card.hoverable{transition:transform .25s, box-shadow .25s, border-color .25s}
     .card.hoverable:hover{
       transform:translateY(-2px);
-      box-shadow:0 16px 50px rgba(0,0,0,.5);
-      border-color:rgba(239,68,68,.25);
+      box-shadow:0 16px 50px rgba(0,0,0,.12);
+      border-color:rgba(239,68,68,.22);
     }
 
     /* ================== HEADER ================== */
     .app-header{
       position:sticky;top:0;z-index:30;
       padding:14px 18px;
-      background:linear-gradient(180deg, rgba(20,20,23,.92) 0%, rgba(20,20,23,.66) 100%);
+      background:linear-gradient(180deg, rgba(255,255,255,.85) 0%, rgba(255,255,255,.6) 100%);
       backdrop-filter: blur(8px);
       border:1px solid var(--bd);
       border-radius:18px;
       margin-bottom:18px;
     }
+    [data-theme="dark"] .app-header{
+      background:linear-gradient(180deg, rgba(20,20,23,.92) 0%, rgba(20,20,23,.66) 100%);
+    }
     .brand-badge{
       width:64px;height:64px;border-radius:14px;overflow:hidden;
       border:2px solid rgba(239,68,68,.5);
-      display:grid;place-items:center;background:#151518;
+      display:grid;place-items:center;background:#f3f4f6;
     }
-    .brand-badge img{width:46px;height:46px;object-fit:contain;filter:drop-shadow(0 4px 14px rgba(239,68,68,.5))}
+    [data-theme="dark"] .brand-badge{ background:#151518; }
+    .brand-badge img{width:46px;height:46px;object-fit:contain;filter:drop-shadow(0 4px 14px rgba(239,68,68,.35))}
     .title-grad{
       font-weight:800;letter-spacing:.2px;
-      background:linear-gradient(90deg,#fff, #ffecec, #ffb3b3 60%, #ffd1d1);
-      -webkit-background-clip:text;background-clip:text;color:transparent
+      color:var(--text);
     }
 
     /* ================== TYPO ================== */
     .muted{color:var(--muted)!important}
-    .headline{color:#ffdddd;font-weight:800}
+    .headline{color:var(--red);font-weight:800}
     .subhead{
-      font-weight:700;color:#ffb4b4;border-bottom:2px solid rgba(239,68,68,.25);
+      font-weight:700;color:var(--red);border-bottom:2px solid rgba(239,68,68,.25);
       padding-bottom:.35rem;margin-bottom:1rem
     }
     .badge-soft{
       border:1px solid rgba(239,68,68,.28);
       background:linear-gradient(180deg, rgba(239,68,68,.12), rgba(239,68,68,.06));
-      color:#ffd7d7; font-weight:700
+      color:inherit; font-weight:700
     }
 
     /* ================== BUTTONS ================== */
     .btn-primary{
       background:linear-gradient(180deg,var(--red) 0%, var(--red-600) 100%)!important;
       border-color:var(--red-700)!important;
+      color:#fff!important;
       font-weight:700; letter-spacing:.2px;
-      box-shadow:0 6px 14px rgba(239,68,68,.28);
+      box-shadow:0 6px 14px rgba(239,68,68,.18);
       transition:transform .18s, box-shadow .18s;
     }
-    .btn-primary:hover{transform:translateY(-1px); box-shadow:0 10px 24px rgba(239,68,68,.35)}
+    .btn-primary:hover{transform:translateY(-1px); box-shadow:0 10px 24px rgba(239,68,68,.25)}
     .btn-dark{
+      background:#e9e9ee!important; border-color:#d1d5db!important; color:#111827!important
+    }
+    [data-theme="dark"] .btn-dark{
       background:#1b1c20!important; border-color:#2a2c31!important; color:#e9e9ee!important
     }
     .btn-outline-light{
-      color:#ffd7d7!important;border-color:rgba(239,68,68,.4)!important
+      color:var(--red)!important;border-color:rgba(239,68,68,.35)!important
     }
     .btn-outline-light:hover{background:var(--red-600)!important;color:white!important}
 
     .clickable{
       cursor:pointer;border:1px solid transparent;border-radius:14px;
-      background:#16171b; transition:all .2s
+      background:#ffffff; transition:all .2s
     }
-    .clickable:hover{border-color:rgba(239,68,68,.35); box-shadow:0 6px 18px rgba(239,68,68,.15)}
+    [data-theme="dark"] .clickable{ background:#16171b; }
+    .clickable:hover{border-color:rgba(239,68,68,.28); box-shadow:0 6px 18px rgba(239,68,68,.10)}
     .clickable.selected{
-      border-color:var(--red-600); box-shadow:0 10px 26px rgba(239,68,68,.28); background:#1b1c21
+      border-color:var(--red-600); box-shadow:0 10px 26px rgba(239,68,68,.18); background:#fff7f7
     }
+    [data-theme="dark"] .clickable.selected{ background:#1b1c21 }
 
     /* ================== FORMS ================== */
     .form-control, .form-select{
-      background:#141519!important;border:1px solid #2a2c31!important;color:var(--text)!important;
+      background:#ffffff!important;border:1px solid #d1d5db!important;color:var(--text)!important;
       border-radius:12px!important;
+    }
+    [data-theme="dark"] .form-control, [data-theme="dark"] .form-select{
+      background:#141519!important;border:1px solid #2a2c31!important;color:#f2f2f5!important;
     }
     .form-control:focus, .form-select:focus{
       border-color:var(--red-600)!important; box-shadow:var(--ring)!important;
     }
-    input[type="date"]{color-scheme:dark}
+    input[type="date"]{color-scheme:light}
+    [data-theme="dark"] input[type="date"]{color-scheme:dark}
 
     /* ================== SLOTS GRID ================== */
     .slot{min-width:92px}
@@ -144,15 +172,19 @@
     /* ================== CTA STICKY ================== */
     .cta-sticky{
       position:sticky; bottom:16px; z-index:40;
-      background:linear-gradient(180deg, rgba(11,11,12,0) 0%, rgba(11,11,12,.85) 30%, rgba(11,11,12,.95) 100%);
+      background:linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.85) 30%, rgba(255,255,255,.95) 100%);
       padding-top:10px; border-radius:16px;
+    }
+    [data-theme="dark"] .cta-sticky{
+      background:linear-gradient(180deg, rgba(11,11,12,0) 0%, rgba(11,11,12,.85) 30%, rgba(11,11,12,.95) 100%);
     }
 
     /* Skeletons */
-    .skeleton{position:relative;overflow:hidden;background:#1b1c20;border-radius:12px}
+    .skeleton{position:relative;overflow:hidden;background:#e5e7eb;border-radius:12px}
+    [data-theme="dark"] .skeleton{background:#1b1c20}
     .skeleton::after{
       content:""; position:absolute; inset:0;
-      background:linear-gradient(100deg, transparent 30%, rgba(255,255,255,.06) 50%, transparent 70%);
+      background:linear-gradient(100deg, transparent 30%, rgba(255,255,255,.35) 50%, transparent 70%);
       animation:shimmer 1.4s infinite
     }
     @keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
@@ -179,6 +211,10 @@
           </div>
         </div>
         <div class="d-flex align-items-center gap-2">
+          <!-- TOGGLE DE TEMA -->
+          <button id="theme-toggle" class="btn btn-outline-light btn-sm me-1" aria-label="Alternar tema (claro/escuro)" title="Tema">
+            <i id="theme-toggle-icon" data-lucide="sun" class="w-4 h-4"></i>
+          </button>
           <span id="user-display" class="muted small">Conectando…</span>
           <button class="btn btn-outline-light btn-sm" id="logout-btn" aria-label="Sair">
             <i data-lucide="log-out" class="w-4 h-4"></i>
@@ -307,6 +343,40 @@
 
   <!-- APP JS + Firebase -->
   <script type="module">
+    /* ================== THEME TOGGLE ================== */
+    function applyTheme(theme){
+      const root = document.documentElement;
+      root.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+      const icon = document.getElementById('theme-toggle-icon');
+      if(icon){
+        icon.setAttribute('data-lucide', theme === 'dark' ? 'moon' : 'sun');
+        if(window.lucide) window.lucide.createIcons();
+      }
+      const btn = document.getElementById('theme-toggle');
+      if(btn) btn.setAttribute('aria-label', \`Alternar tema (atual: \${theme})\`);
+    }
+    // inicia com salvo (ou claro por padrão)
+    (() => {
+      const saved = localStorage.getItem('theme');
+      applyTheme(saved || 'light');
+    })();
+    document.addEventListener('DOMContentLoaded', ()=>{
+      document.getElementById('theme-toggle')?.addEventListener('click', ()=>{
+        const current = document.documentElement.getAttribute('data-theme') || 'light';
+        applyTheme(current === 'light' ? 'dark' : 'light');
+      });
+      // respeita troca do SO se usuário não escolheu manualmente
+      try{
+        const mq = window.matchMedia('(prefers-color-scheme: dark)');
+        mq.addEventListener?.('change', (e)=>{
+          if(!localStorage.getItem('theme')){
+            applyTheme(e.matches ? 'dark' : 'light');
+          }
+        });
+      }catch(_){}
+    });
+
     /* ================== FIREBASE ================== */
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -355,7 +425,7 @@
     const $ = (sel) => document.querySelector(sel);
     const $$ = (sel) => document.querySelectorAll(sel);
 
-    function toast(msg){ 
+    function toast(msg){
       $('#toast-body').textContent = msg;
       toastInstance?.show();
     }
@@ -416,7 +486,7 @@
       list.innerHTML = barbers.map(b=>`
         <div class="col-6 col-md-4">
           <div class="clickable card p-3 text-center" role="button" tabindex="0" data-barber-id="${b.id}">
-            <img src="${b.image}" alt="Foto de ${b.name}" class="rounded-circle mb-2" style="width:76px;height:76px;object-fit:cover;border:1px solid rgba(239,68,68,.35)">
+            <img src="${b.image}" alt="Foto de ${b.name}" class="rounded-circle mb-2" style="width:76px;height:76px;object-fit:cover;border:1px solid rgba(239,68,68,.28)">
             <div class="fw-bold">${b.name}</div>
             <small class="muted">${b.specialty}</small>
           </div>
@@ -432,8 +502,7 @@
     /* ================== RENDER: STATEFUL ================== */
     function updateSelectedServiceUI(){
       $$('#services-list [data-service-id]').forEach(el=>{
-        const card = el;
-        if(el.dataset.serviceId === selected.service?.id) card.classList.add('selected'); else card.classList.remove('selected');
+        if(el.dataset.serviceId === selected.service?.id) el.classList.add('selected'); else el.classList.remove('selected');
       });
 
       const display = $('#selected-service-display');
@@ -451,8 +520,7 @@
 
     function updateSelectedBarberUI(){
       $$('#barbers-list [data-barber-id]').forEach(el=>{
-        const card = el;
-        if(el.dataset.barberId === selected.barber?.id) card.classList.add('selected'); else card.classList.remove('selected');
+        if(el.dataset.barberId === selected.barber?.id) el.classList.add('selected'); else el.classList.remove('selected');
       });
 
       const display = $('#selected-barber-display');
@@ -626,8 +694,8 @@
         const p = subscriptionPlans.find(x=>x.id===userSubscription.planId);
         const cuts = userSubscription.cutsRemaining ?? 0;
         const status = cuts>0 ? 'ATIVA' : 'Cortes Esgotados';
-        const color = cuts>0 ? 'bg-success' : 'bg-warning';
-        details.innerHTML = `Plano: <strong>${p?.name ?? '—'}</strong><br>Status: <span class="${color} px-2 py-1 rounded-2">${status}</span><br>Cortes restantes: <span class="fw-bold">${cuts}</span>`;
+        const colorClass = cuts>0 ? 'bg-success' : 'bg-warning';
+        details.innerHTML = `Plano: <strong>${p?.name ?? '—'}</strong><br>Status: <span class="${colorClass} px-2 py-1 rounded-2">${status}</span><br>Cortes restantes: <span class="fw-bold">${cuts}</span>`;
         badge.textContent = status;
       } else{
         details.textContent = 'Você não possui assinatura ativa. Escolha um plano para economizar!';
@@ -793,12 +861,12 @@
       lucide.createIcons();
 
       // logout
-      $('#logout-btn')?.addEventListener('click', async ()=>{
+      document.getElementById('logout-btn')?.addEventListener('click', async ()=>{
         if(auth){ await signOut(auth); toast('Sessão reiniciada anonimamente.'); }
       });
 
       // date min + change
-      const dateInput = $('#appointment-date');
+      const dateInput = document.getElementById('appointment-date');
       if(dateInput){
         setMinToday(dateInput);
         dateInput.addEventListener('change', (e)=>{
@@ -820,7 +888,7 @@
       renderBarbers();
 
       // Book
-      $('#book-button')?.addEventListener('click', handleBooking);
+      document.getElementById('book-button')?.addEventListener('click', handleBooking);
     });
   </script>
 </body>
