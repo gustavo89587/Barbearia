@@ -1,848 +1,827 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Barbearia Alpha - Agendamento Online</title>
-    <!-- Carrega Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <!-- Ícones Lucide --><script src="https://unpkg.com/lucide@latest"></script>
-    
-    <style>
-        /* Define a fonte Inter como padrão */
-        body { font-family: 'Inter', sans-serif; background-color: #1a1a1a; color: #f3f4f6; }
-        /* Estilos customizados para o tema de barbearia */
-        .barber-bg { background-image: url('https://placehold.co/1200x600/1f2937/d1d5db?text=Barbearia+Alpha'); background-size: cover; background-position: center; }
-        .btn-primary {
-            @apply px-6 py-3 font-semibold text-lg text-white bg-red-700 rounded-lg shadow-lg hover:bg-red-800 transition duration-300 transform hover:scale-105 active:scale-95 disabled:bg-red-900 disabled:opacity-60;
-        }
-        .btn-secondary {
-            @apply px-4 py-2 font-medium text-gray-300 bg-gray-700 rounded-lg hover:bg-gray-600 transition duration-300;
-        }
-        .card {
-            @apply bg-gray-800 p-6 rounded-xl shadow-2xl transition duration-300 hover:shadow-red-700/30 border border-gray-700;
-        }
-        .header-section {
-            @apply text-3xl font-bold text-red-600 mb-4 border-b-2 border-red-700 pb-2;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Barbearia Milenitos — Agendamento</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+
+  <!-- Inter Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* ================== THEME ================== */
+    :root{
+      --bg:#0b0b0c;
+      --card:#141417;
+      --card-2:#16181b;
+      --muted:#a7a7ad;
+      --text:#f2f2f5;
+      --red:#ef4444;   /* 500 */
+      --red-600:#dc2626;
+      --red-700:#b91c1c;
+      --ring: 0 0 0 .2rem rgba(239,68,68,.35);
+      --shadow: 0 20px 60px rgba(0,0,0,.5);
+      --glass: rgba(20,20,23,.72);
+      --bd: rgba(255,255,255,.08);
+      --success:#16a34a;
+      --warning:#f59e0b;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(185,28,28,.22), transparent 60%),
+        radial-gradient(1000px 600px at 110% 10%, rgba(220,38,38,.18), transparent 55%),
+        linear-gradient(180deg, #0b0b0c 0%, #0a0a0b 100%);
+      color:var(--text);
+    }
+    .container-app{max-width:1100px}
+
+    /* ================== GLASS / CARDS ================== */
+    .glass{
+      background:var(--glass);
+      backdrop-filter:saturate(140%) blur(10px);
+      -webkit-backdrop-filter:saturate(140%) blur(10px);
+      border:1px solid var(--bd);
+      border-radius:18px;
+      box-shadow:var(--shadow);
+    }
+    .card{
+      background:linear-gradient(180deg, var(--card) 0%, var(--card-2) 100%);
+      border:1px solid var(--bd);
+      border-radius:16px!important;
+      box-shadow:0 8px 30px rgba(0,0,0,.35);
+    }
+    .card.hoverable{transition:transform .25s, box-shadow .25s, border-color .25s}
+    .card.hoverable:hover{
+      transform:translateY(-2px);
+      box-shadow:0 16px 50px rgba(0,0,0,.5);
+      border-color:rgba(239,68,68,.25);
+    }
+
+    /* ================== HEADER ================== */
+    .app-header{
+      position:sticky;top:0;z-index:30;
+      padding:14px 18px;
+      background:linear-gradient(180deg, rgba(20,20,23,.92) 0%, rgba(20,20,23,.66) 100%);
+      backdrop-filter: blur(8px);
+      border:1px solid var(--bd);
+      border-radius:18px;
+      margin-bottom:18px;
+    }
+    .brand-badge{
+      width:64px;height:64px;border-radius:14px;overflow:hidden;
+      border:2px solid rgba(239,68,68,.5);
+      display:grid;place-items:center;background:#151518;
+    }
+    .brand-badge img{width:46px;height:46px;object-fit:contain;filter:drop-shadow(0 4px 14px rgba(239,68,68,.5))}
+    .title-grad{
+      font-weight:800;letter-spacing:.2px;
+      background:linear-gradient(90deg,#fff, #ffecec, #ffb3b3 60%, #ffd1d1);
+      -webkit-background-clip:text;background-clip:text;color:transparent
+    }
+
+    /* ================== TYPO ================== */
+    .muted{color:var(--muted)!important}
+    .headline{color:#ffdddd;font-weight:800}
+    .subhead{
+      font-weight:700;color:#ffb4b4;border-bottom:2px solid rgba(239,68,68,.25);
+      padding-bottom:.35rem;margin-bottom:1rem
+    }
+    .badge-soft{
+      border:1px solid rgba(239,68,68,.28);
+      background:linear-gradient(180deg, rgba(239,68,68,.12), rgba(239,68,68,.06));
+      color:#ffd7d7; font-weight:700
+    }
+
+    /* ================== BUTTONS ================== */
+    .btn-primary{
+      background:linear-gradient(180deg,var(--red) 0%, var(--red-600) 100%)!important;
+      border-color:var(--red-700)!important;
+      font-weight:700; letter-spacing:.2px;
+      box-shadow:0 6px 14px rgba(239,68,68,.28);
+      transition:transform .18s, box-shadow .18s;
+    }
+    .btn-primary:hover{transform:translateY(-1px); box-shadow:0 10px 24px rgba(239,68,68,.35)}
+    .btn-dark{
+      background:#1b1c20!important; border-color:#2a2c31!important; color:#e9e9ee!important
+    }
+    .btn-outline-light{
+      color:#ffd7d7!important;border-color:rgba(239,68,68,.4)!important
+    }
+    .btn-outline-light:hover{background:var(--red-600)!important;color:white!important}
+
+    .clickable{
+      cursor:pointer;border:1px solid transparent;border-radius:14px;
+      background:#16171b; transition:all .2s
+    }
+    .clickable:hover{border-color:rgba(239,68,68,.35); box-shadow:0 6px 18px rgba(239,68,68,.15)}
+    .clickable.selected{
+      border-color:var(--red-600); box-shadow:0 10px 26px rgba(239,68,68,.28); background:#1b1c21
+    }
+
+    /* ================== FORMS ================== */
+    .form-control, .form-select{
+      background:#141519!important;border:1px solid #2a2c31!important;color:var(--text)!important;
+      border-radius:12px!important;
+    }
+    .form-control:focus, .form-select:focus{
+      border-color:var(--red-600)!important; box-shadow:var(--ring)!important;
+    }
+    input[type="date"]{color-scheme:dark}
+
+    /* ================== SLOTS GRID ================== */
+    .slot{min-width:92px}
+    .slot .btn{width:100%}
+
+    /* ================== CTA STICKY ================== */
+    .cta-sticky{
+      position:sticky; bottom:16px; z-index:40;
+      background:linear-gradient(180deg, rgba(11,11,12,0) 0%, rgba(11,11,12,.85) 30%, rgba(11,11,12,.95) 100%);
+      padding-top:10px; border-radius:16px;
+    }
+
+    /* Skeletons */
+    .skeleton{position:relative;overflow:hidden;background:#1b1c20;border-radius:12px}
+    .skeleton::after{
+      content:""; position:absolute; inset:0;
+      background:linear-gradient(100deg, transparent 30%, rgba(255,255,255,.06) 50%, transparent 70%);
+      animation:shimmer 1.4s infinite
+    }
+    @keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+
+    /* Reduced Motion */
+    @media (prefers-reduced-motion:reduce){
+      .card.hoverable,.btn-primary,.clickable{transition:none}
+    }
+  </style>
 </head>
 <body>
+  <div class="container container-app py-3">
 
-    <!-- Conteúdo principal do aplicativo --><div id="app" class="min-h-screen flex flex-col items-center p-4">
+    <!-- Header -->
+    <header class="app-header glass">
+      <div class="d-flex align-items-center justify-content-between gap-3">
+        <div class="d-flex align-items-center gap-3">
+          <span class="brand-badge">
+            <img id="barbershop-logo-img" src="https://placehold.co/56x56/ef4444/ffffff?text=M" alt="Logo Barbearia Milenitos" />
+          </span>
+          <div>
+            <h1 class="h3 m-0 title-grad">Barbearia Milenitos</h1>
+            <small class="muted">Agendamento rápido • Atendimento premium</small>
+          </div>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <span id="user-display" class="muted small">Conectando…</span>
+          <button class="btn btn-outline-light btn-sm" id="logout-btn" aria-label="Sair">
+            <i data-lucide="log-out" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+    </header>
 
-        <!-- Cabeçalho (Fixo) --><header class="w-full max-w-4xl bg-gray-900/90 backdrop-blur-sm sticky top-0 z-10 rounded-xl p-4 mb-8 shadow-2xl border-b border-red-700">
-            <div class="flex justify-between items-center">
-                <!-- Logo da Barbearia --><div class="flex items-center space-x-3">
-                    <img id="barbershop-logo" src="https://placehold.co/60x60/374151/d1d5db?text=Logo" alt="Logo da Barbearia Alpha" class="h-12 w-12 rounded-full object-cover">
-                    <h1 class="text-4xl font-extrabold text-red-600">Alpha Barbers</h1>
-                </div>
-                
-                <div class="flex items-center space-x-3 text-sm">
-                    <span id="user-display" class="text-gray-400">Carregando usuário...</span>
-                    <button onclick="handleLogout()" class="text-red-500 hover:text-red-400 transition duration-200">
-                        <i data-lucide="log-out" class="w-5 h-5 inline-block"></i>
-                    </button>
-                </div>
+    <!-- Info -->
+    <section class="card p-4 mb-3 hoverable">
+      <h2 class="subhead h5">Informações da Barbearia</h2>
+      <div class="row g-4">
+        <div class="col-md-6">
+          <p class="fw-semibold text-uppercase small mb-1"><i data-lucide="map-pin" class="me-2"></i>Endereço</p>
+          <p id="barbershop-address" class="mb-0">—</p>
+        </div>
+        <div class="col-md-6">
+          <p class="fw-semibold text-uppercase small mb-1"><i data-lucide="wallet" class="me-2"></i>Pagamentos</p>
+          <ul id="payment-methods-list" class="mb-0 ps-3 small"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Assinaturas -->
+    <section class="card p-4 mb-3 hoverable">
+      <div class="d-flex align-items-center justify-content-between mb-2">
+        <h2 class="subhead h5 m-0">Gerenciamento de Assinaturas</h2>
+        <span id="sub-badge" class="badge badge-soft rounded-pill px-3 py-2">Status</span>
+      </div>
+
+      <div id="sub-status-display" class="p-3 glass">
+        <p class="fw-bold mb-1"><i data-lucide="award" class="me-2"></i>Status da Assinatura</p>
+        <p id="sub-details" class="mb-0">Carregando…</p>
+      </div>
+
+      <h3 class="h6 text-uppercase mt-4 mb-3">Planos Disponíveis</h3>
+      <div id="subscription-plans-list" class="row g-3">
+        <!-- Inject -->
+      </div>
+    </section>
+
+    <!-- Passo 1 -->
+    <section class="card p-4 mb-3 hoverable">
+      <h2 class="subhead h5">1. Escolha o Serviço</h2>
+      <div id="services-list" class="row g-3">
+        <!-- Inject -->
+      </div>
+      <div id="selected-service-display" class="mt-3 glass d-none">
+        <p class="mb-0" id="selected-service-details"></p>
+      </div>
+    </section>
+
+    <!-- Passo 2 -->
+    <section id="barber-selection-section" class="card p-4 mb-3 hoverable opacity-50 pointer-events-none">
+      <h2 class="subhead h5">2. Escolha o Barbeiro</h2>
+      <div id="barbers-list" class="row g-3">
+        <!-- Inject -->
+      </div>
+      <div id="selected-barber-display" class="mt-3 glass d-none">
+        <p class="mb-0" id="selected-barber-details"></p>
+      </div>
+    </section>
+
+    <!-- Passo 3 -->
+    <section id="datetime-selection-section" class="card p-4 mb-3 hoverable opacity-50 pointer-events-none">
+      <h2 class="subhead h5">3. Data e Hora</h2>
+      <div class="row g-3 align-items-end">
+        <div class="col-md-4">
+          <label for="appointment-date" class="form-label muted">Data</label>
+          <input type="date" id="appointment-date" class="form-control" aria-describedby="date-help" />
+          <div id="date-help" class="form-text text-secondary">Escolha um dia disponível</div>
+        </div>
+        <div class="col-md-8">
+          <label class="form-label muted">Horários</label>
+          <div id="time-slots-container" class="row g-2">
+            <div class="col-12">
+              <div class="skeleton" style="height:48px;"></div>
             </div>
-        </header>
+          </div>
+          <p id="time-slots-message" class="muted small mt-2">Selecione uma data para ver horários.</p>
+        </div>
+      </div>
 
-        <!-- Seção de Informações da Barbearia --><section class="card w-full max-w-4xl mb-8">
-            <h2 class="header-section text-2xl">Informações da Barbearia</h2>
-            <div class="flex flex-col md:flex-row gap-6">
-                <!-- Endereço --><div class="flex-1">
-                    <p class="font-semibold text-red-400 mb-2 flex items-center"><i data-lucide="map-pin" class="w-5 h-5 mr-2"></i>Endereço</p>
-                    <p id="barbershop-address" class="text-gray-300"></p>
-                </div>
-                <!-- Pagamentos --><div class="flex-1">
-                    <p class="font-semibold text-red-400 mb-2 flex items-center"><i data-lucide="wallet" class="w-5 h-5 mr-2"></i>Formas de Pagamento</p>
-                    <ul id="payment-methods-list" class="text-gray-300 list-disc list-inside space-y-1">
-                        <!-- Métodos de Pagamento serão injetados aqui --></ul>
-                </div>
-            </div>
-        </section>
+      <div class="cta-sticky mt-3">
+        <button id="book-button" class="btn btn-primary btn-lg w-100" disabled>Selecione serviço, barbeiro, data e hora</button>
+      </div>
+    </section>
 
-        <main class="w-full max-w-4xl space-y-12">
-            
-            <!-- Seção de Gerenciamento de Assinaturas --><section class="card">
-                <h2 class="header-section">Gerenciamento de Assinaturas</h2>
-                <div id="subscription-manager" class="space-y-4">
-                    <!-- Status da Assinatura será injetado aqui --><div id="sub-status-display" class="p-4 bg-gray-900 rounded-lg border border-gray-700">
-                        <p class="font-semibold text-lg text-red-400 flex items-center"><i data-lucide="award" class="w-5 h-5 mr-2"></i> Status da Assinatura:</p>
-                        <p id="sub-details" class="text-gray-300">Carregando...</p>
-                    </div>
-                    
-                    <h3 class="text-xl font-semibold text-white mt-6">Planos Disponíveis</h3>
-                    <div id="subscription-plans-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                         <!-- Planos de Assinatura serão injetados aqui --></div>
-                </div>
-            </section>
+    <!-- Seus agendamentos -->
+    <section class="card p-4 mb-4 hoverable">
+      <h2 class="subhead h5">Seus Agendamentos Futuros</h2>
+      <div id="user-appointments-list" class="d-grid gap-3">
+        <p id="no-appointments-message" class="text-center muted m-0">Nenhum agendamento encontrado.</p>
+      </div>
+    </section>
 
-            <!-- Passo 1: Seleção de Serviço --><section class="card">
-                <h2 class="header-section">1. Escolha o Serviço (Se Aplicável)</h2>
-                <div id="services-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Cards de Serviço serão injetados aqui --></div>
-                <div id="selected-service-display" class="mt-6 p-4 bg-gray-900 rounded-lg border border-gray-700 hidden">
-                    <p class="font-semibold text-lg text-red-400">Serviço Selecionado:</p>
-                    <p id="selected-service-details" class="text-gray-200"></p>
-                </div>
-            </section>
-
-            <!-- Passo 2: Seleção de Barbeiro --><section class="card opacity-50 pointer-events-none" id="barber-selection-section">
-                <h2 class="header-section">2. Escolha o Barbeiro</h2>
-                <div id="barbers-list" class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    <!-- Cards de Barbeiro serão injetados aqui --></div>
-                <div id="selected-barber-display" class="mt-6 p-4 bg-gray-900 rounded-lg border border-gray-700 hidden">
-                    <p class="font-semibold text-lg text-red-400">Barbeiro Selecionado:</p>
-                    <p id="selected-barber-details" class="text-gray-200"></p>
-                </div>
-            </section>
-            
-            <!-- Passo 3: Seleção de Data e Hora --><section class="card opacity-50 pointer-events-none" id="datetime-selection-section">
-                <h2 class="header-section">3. Escolha Data e Hora (Seu Calendário)</h2>
-                <div class="flex flex-col md:flex-row gap-6">
-                    <!-- Seletor de Data --><div class="md:w-1/3">
-                        <label for="appointment-date" class="block text-sm font-medium text-gray-400 mb-2">Data:</label>
-                        <input type="date" id="appointment-date" class="w-full p-3 rounded-lg bg-gray-900 border border-gray-700 text-white focus:ring-red-600 focus:border-red-600">
-                    </div>
-
-                    <!-- Horários Disponíveis --><div class="md:w-2/3">
-                        <label class="block text-sm font-medium text-gray-400 mb-2">Horários Disponíveis:</label>
-                        <div id="time-slots-container" class="grid grid-cols-3 sm:grid-cols-4 gap-3 p-3 bg-gray-900 rounded-lg border border-gray-700 min-h-[120px]">
-                            <p id="time-slots-message" class="col-span-3 sm:col-span-4 text-center text-gray-500 mt-4">Selecione uma data para ver os horários.</p>
-                            <!-- Slots de Horário serão injetados aqui --></div>
-                    </div>
-                </div>
-
-                <button id="book-button" class="btn-primary w-full mt-8 disabled:bg-red-900" disabled onclick="handleBooking()">
-                    Agendar Horário
-                </button>
-            </section>
-
-            <!-- Seção de Agendamentos Futuros (Simulação de Dashboard) --><section class="card">
-                <h2 class="header-section">Seus Agendamentos Futuros</h2>
-                <div id="user-appointments-list" class="space-y-4">
-                    <p id="no-appointments-message" class="text-center text-gray-500 mt-4">Nenhum agendamento encontrado.</p>
-                    <!-- Agendamentos do Usuário serão injetados aqui --></div>
-            </section>
-
-            <!-- Status e Mensagens (Modal de Notificação) --><div id="status-modal" class="fixed inset-0 bg-black bg-opacity-70 hidden items-center justify-center z-50">
-                <div class="bg-gray-800 p-8 rounded-xl shadow-2xl max-w-md w-full border border-red-700">
-                    <h3 id="modal-title" class="text-2xl font-bold mb-4 text-red-600">Status</h3>
-                    <p id="modal-message" class="text-gray-300 mb-6"></p>
-                    <button onclick="hideModal()" class="btn-secondary w-full">Fechar</button>
-                </div>
-            </div>
-
-        </main>
-
+    <!-- Toasts -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index:1090">
+      <div id="toast" class="toast text-bg-dark border-0" role="status" aria-live="polite" aria-atomic="true">
+        <div class="toast-body" id="toast-body">Pronto.</div>
+      </div>
     </div>
 
-    <!-- Bibliotecas Firebase --><script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, onSnapshot, collection, query, where, addDoc, serverTimestamp, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    <!-- Modal -->
+    <div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content card">
+          <div class="modal-header border-0">
+            <h5 class="modal-title headline" id="modalTitle">Status</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+          </div>
+          <div class="modal-body">
+            <p id="modal-message" class="mb-0"></p>
+          </div>
+          <div class="modal-footer border-0">
+            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Fechar</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-        // Configurações e Variáveis Globais (MANDATÓRIAS)
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-        
-        // Variáveis globais do app
-        let app, db, auth;
-        let userId = null;
-        let isAuthReady = false;
-        let selected = {
-            service: null,
-            barber: null,
-            date: null,
-            time: null, // timestamp exato do agendamento
-            timeStr: null // string de hora (ex: "10:00")
-        };
-        let existingAppointments = [];
-        let userSubscription = null; // { planId: 'trimestral', cutsRemaining: 3, status: 'Active', ... }
+  </div>
 
-        // Dados estáticos da barbearia
-        const services = [
-            { id: 'corte', name: 'Corte de Cabelo Clássico', price: 60.00, duration: 60, icon: 'scissors' },
-            { id: 'barba', name: 'Design de Barba', price: 40.00, duration: 30, icon: 'beard' },
-            { id: 'completo', name: 'Combo (Corte + Barba)', price: 90.00, duration: 90, icon: 'chevrons-up-down' },
-            { id: 'pigmentacao', name: 'Pigmentação', price: 50.00, duration: 45, icon: 'palette' }
-        ];
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 
-        const barbers = [
-            { id: 'joao', name: 'João "O Mestre"', specialty: 'Clássico e Taper Fade', image: 'https://placehold.co/100x100/374151/9ca3af?text=JO' },
-            { id: 'maria', name: 'Maria "A Navalha"', specialty: 'Barba Terapia e Design Feminino', image: 'https://placehold.co/100x100/374151/9ca3af?text=MA' },
-            { id: 'pedro', name: 'Pedro "O Artista"', specialty: 'Freestyle e Colorimetria', image: 'https://placehold.co/100x100/374151/9ca3af?text=PE' }
-        ];
-        
-        const barbershopInfo = {
-            name: "Alpha Barbers",
-            address: 'Rua da Tecnologia, 123 - Centro, São Paulo/SP',
-            payments: ['Cartão de Crédito/Débito (Visa, Master)', 'Pix (Chave: 1234567890)', 'Dinheiro'],
-            logoUrl: '1000254662.png' // **SUBSTITUA PELA URL DO SEU LOGO REAL**
-        };
+  <!-- APP JS + Firebase -->
+  <script type="module">
+    /* ================== FIREBASE ================== */
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, onSnapshot, collection, addDoc, serverTimestamp, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        const subscriptionPlans = [
-            { id: 'trimestral', name: 'Plano Trimestral', cuts: 4, price: 200.00, description: '4 cortes em 90 dias' },
-            { id: 'mensal', name: 'Plano Mensal', cuts: 2, price: 100.00, description: '2 cortes em 30 dias' }
-        ];
+    /* ================== CONFIG/GLOBALS ================== */
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+    const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+    const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
-        // --- Funções de Utilidade ---
+    let app, db, auth, userId = null, isAuthReady = false;
+    let statusModalInstance, toastInstance;
 
-        // Função para mostrar o modal de status/mensagem
-        window.showModal = function(title, message) {
-            document.getElementById('modal-title').textContent = title;
-            document.getElementById('modal-message').textContent = message;
-            document.getElementById('status-modal').classList.remove('hidden', 'opacity-0');
-            document.getElementById('status-modal').classList.add('flex', 'opacity-100');
+    const selected = { service:null, barber:null, date:null, time:null, timeStr:null };
+    let existingAppointments = [];
+    let userSubscription = null;
+
+    // Data estática
+    const services = [
+      { id:'corte', name:'Corte de Cabelo Clássico', price:60.00, duration:60, icon:'scissors' },
+      { id:'barba', name:'Design de Barba',           price:40.00, duration:30, icon:'sparkles' }, /* 'beard' não existe no Lucide */
+      { id:'completo', name:'Combo (Corte + Barba)',  price:90.00, duration:90, icon:'wand-2' },
+      { id:'pigmentacao', name:'Pigmentação',         price:50.00, duration:45, icon:'palette' }
+    ];
+
+    const barbers = [
+      { id:'joao',  name:'João “O Mestre”',  specialty:'Clássico e Taper Fade',     image:'https://placehold.co/100x100/1f2430/c6cad3?text=JO' },
+      { id:'maria', name:'Maria “A Navalha”',specialty:'Barba Terapia e Design',    image:'https://placehold.co/100x100/1f2430/c6cad3?text=MA' },
+      { id:'pedro', name:'Pedro “O Artista”',specialty:'Freestyle e Colorimetria',  image:'https://placehold.co/100x100/1f2430/c6cad3?text=PE' }
+    ];
+
+    const barbershopInfo = {
+      name:"Barbearia Milenitos",
+      address:"Rua da Tecnologia, 123 — Centro, São Paulo/SP",
+      payments:["Cartão (Visa/Master)","Pix (Chave: 1234567890)","Dinheiro"],
+      logoUrl:"https://placehold.co/56x56/ef4444/ffffff?text=M"
+    };
+
+    const subscriptionPlans = [
+      { id:'trimestral', name:'Plano Trimestral', cuts:4, price:200.00, description:'4 cortes em 90 dias' },
+      { id:'mensal',     name:'Plano Mensal',     cuts:2, price:100.00, description:'2 cortes em 30 dias' }
+    ];
+
+    /* ================== HELPERS ================== */
+    const $ = (sel) => document.querySelector(sel);
+    const $$ = (sel) => document.querySelectorAll(sel);
+
+    function toast(msg){ 
+      $('#toast-body').textContent = msg;
+      toastInstance?.show();
+    }
+    function showModal(title, message){
+      $('#modalTitle').textContent = title;
+      $('#modal-message').innerHTML = message;
+      statusModalInstance?.show();
+    }
+    function setMinToday(input){
+      const t = new Date();
+      const yyyy = t.getFullYear();
+      const mm = String(t.getMonth()+1).padStart(2,'0');
+      const dd = String(t.getDate()).padStart(2,'0');
+      input.min = `${yyyy}-${mm}-${dd}`;
+    }
+    function timeToDate(dateStr, timeStr){
+      if(!dateStr || !timeStr) return null;
+      const [y,m,d] = dateStr.split('-').map(Number);
+      const [H,M]  = timeStr.split(':').map(Number);
+      return new Date(y, m-1, d, H, M);
+    }
+
+    function getAppointmentsCollectionPath(){ return `artifacts/${appId}/public/data/barbershop_appointments`; }
+    function getSubscriptionCollectionPath(docId='current'){ return `artifacts/${appId}/users/${userId}/subscriptions/${docId}`; }
+
+    /* ================== RENDER: STATIC ================== */
+    function renderBarbershopInfo(){
+      const logo = $('#barbershop-logo-img');
+      if(logo && barbershopInfo.logoUrl) logo.src = barbershopInfo.logoUrl;
+      $('#barbershop-address').textContent = barbershopInfo.address;
+      $('#payment-methods-list').innerHTML = barbershopInfo.payments.map(p=>`<li>${p}</li>`).join('');
+      lucide.createIcons();
+    }
+
+    function renderServices(){
+      const list = $('#services-list'); if(!list) return;
+      list.innerHTML = services.map(s=>`
+        <div class="col-12 col-md-6">
+          <div class="clickable card p-3 d-flex align-items-center gap-3" role="button" tabindex="0" data-service-id="${s.id}">
+            <i data-lucide="${s.icon}"></i>
+            <div class="flex-grow-1">
+              <div class="fw-bold">${s.name}</div>
+              <small class="muted">R$ ${s.price.toFixed(2)} • ${s.duration} min</small>
+            </div>
+          </div>
+        </div>
+      `).join('');
+      lucide.createIcons();
+      $$('#services-list [data-service-id]').forEach(el=>{
+        el.addEventListener('click', ()=> selectService(el.dataset.serviceId));
+        el.addEventListener('keydown', (e)=>{ if(e.key==='Enter'||e.key===' ') { e.preventDefault(); selectService(el.dataset.serviceId);} });
+      });
+      updateSelectedServiceUI();
+    }
+
+    function renderBarbers(){
+      const list = $('#barbers-list'); if(!list) return;
+      list.innerHTML = barbers.map(b=>`
+        <div class="col-6 col-md-4">
+          <div class="clickable card p-3 text-center" role="button" tabindex="0" data-barber-id="${b.id}">
+            <img src="${b.image}" alt="Foto de ${b.name}" class="rounded-circle mb-2" style="width:76px;height:76px;object-fit:cover;border:1px solid rgba(239,68,68,.35)">
+            <div class="fw-bold">${b.name}</div>
+            <small class="muted">${b.specialty}</small>
+          </div>
+        </div>
+      `).join('');
+      $$('#barbers-list [data-barber-id]').forEach(el=>{
+        el.addEventListener('click', ()=> selectBarber(el.dataset.barberId));
+        el.addEventListener('keydown', (e)=>{ if(e.key==='Enter'||e.key===' ') { e.preventDefault(); selectBarber(el.dataset.barberId);} });
+      });
+      updateSelectedBarberUI();
+    }
+
+    /* ================== RENDER: STATEFUL ================== */
+    function updateSelectedServiceUI(){
+      $$('#services-list [data-service-id]').forEach(el=>{
+        const card = el;
+        if(el.dataset.serviceId === selected.service?.id) card.classList.add('selected'); else card.classList.remove('selected');
+      });
+
+      const display = $('#selected-service-display');
+      const barberSection = $('#barber-selection-section');
+      if(selected.service){
+        display.classList.remove('d-none');
+        $('#selected-service-details').innerHTML = `<strong>${selected.service.name}</strong> — R$ ${selected.service.price.toFixed(2)}`;
+        barberSection.classList.remove('opacity-50','pointer-events-none');
+      } else{
+        display.classList.add('d-none');
+        barberSection.classList.add('opacity-50','pointer-events-none');
+      }
+      updateBookingButtonState();
+    }
+
+    function updateSelectedBarberUI(){
+      $$('#barbers-list [data-barber-id]').forEach(el=>{
+        const card = el;
+        if(el.dataset.barberId === selected.barber?.id) card.classList.add('selected'); else card.classList.remove('selected');
+      });
+
+      const display = $('#selected-barber-display');
+      const datetimeSection = $('#datetime-selection-section');
+      if(selected.barber){
+        display.classList.remove('d-none');
+        $('#selected-barber-details').textContent = `${selected.barber.name} (${selected.barber.specialty})`;
+        datetimeSection.classList.remove('opacity-50','pointer-events-none');
+      } else{
+        display.classList.add('d-none');
+        datetimeSection.classList.add('opacity-50','pointer-events-none');
+      }
+      updateBookingButtonState();
+    }
+
+    function renderTimeSlots(){
+      const container = $('#time-slots-container');
+      const message = $('#time-slots-message');
+      if(!container || !message) return;
+
+      container.innerHTML='';
+      message.classList.add('d-none');
+
+      if(!selected.date){
+        message.textContent = 'Selecione uma data para ver os horários.';
+        message.classList.remove('d-none');
+        return;
+      }
+
+      const open = 8*60, close = 18*60, step = 60;
+      const slots = [];
+      for(let t=open; t<close; t+=step){
+        const h=String(Math.floor(t/60)).padStart(2,'0');
+        const m=String(t%60).padStart(2,'0');
+        slots.push(`${h}:${m}`);
+      }
+
+      const bookedTimes = existingAppointments
+        .filter(a=>{
+          const d = new Date(a.timestamp).toISOString().split('T')[0];
+          return d === selected.date && a.barberId === selected.barber?.id;
+        })
+        .map(a => new Date(a.timestamp).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}));
+
+      let hasAvail = false;
+
+      slots.forEach(timeStr=>{
+        const isBooked = bookedTimes.includes(timeStr);
+        const isSelected = timeStr===selected.timeStr;
+        if(!isBooked) hasAvail = true;
+
+        const cls = isSelected ? 'btn btn-primary' : (isBooked ? 'btn btn-dark disabled text-decoration-line-through' : 'btn btn-dark border-secondary');
+        const col = document.createElement('div');
+        col.className = 'col-4 col-sm-3 col-lg-2 slot';
+        col.innerHTML = `<button class="${cls}" ${isBooked?'disabled':''} aria-pressed="${isSelected}" aria-label="Horário ${timeStr}">${timeStr}</button>`;
+        col.querySelector('button')?.addEventListener('click', ()=> selectTime(timeStr));
+        container.appendChild(col);
+      });
+
+      if(!hasAvail){
+        message.textContent = 'Sem horários disponíveis neste dia/barbeiro.';
+        message.classList.remove('d-none');
+      }
+      updateBookingButtonState();
+    }
+
+    function updateBookingButtonState(){
+      const btn = $('#book-button'); if(!btn) return;
+      let text = 'Agendar';
+      if(userSubscription && userSubscription.cutsRemaining>0){
+        text = `Usar 1 corte da assinatura (${userSubscription.cutsRemaining} restantes)`;
+      } else{
+        text = 'Agendar (pagamento na loja)';
+      }
+
+      if(selected.service && selected.barber && selected.date && selected.time){
+        btn.disabled = false;
+        btn.textContent = text;
+      } else{
+        btn.disabled = true;
+        btn.textContent = 'Selecione serviço, barbeiro, data e hora';
+      }
+    }
+
+    function renderUserAppointments(){
+      const list = $('#user-appointments-list');
+      const empty = $('#no-appointments-message');
+      if(!list || !empty) return;
+
+      list.innerHTML='';
+      if(!isAuthReady || !userId){
+        list.innerHTML = `<p class="text-center muted m-0">Faça login para ver seus agendamentos.</p>`;
+        return;
+      }
+
+      const now = Date.now();
+      const future = existingAppointments
+        .filter(a=> a.userId===userId && a.timestamp>now)
+        .sort((a,b)=> a.timestamp-b.timestamp);
+
+      if(future.length===0){
+        empty.classList.remove('d-none');
+        return;
+      }
+      empty.classList.add('d-none');
+
+      future.forEach(a=>{
+        const d = new Date(a.timestamp);
+        const dateStr = d.toLocaleDateString('pt-BR');
+        const timeStr = d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+        const barber = barbers.find(b=>b.id===a.barberId)?.name ?? a.barberId;
+        const service = services.find(s=>s.id===a.serviceName)?.name ?? a.serviceName;
+
+        const node = document.createElement('div');
+        node.className='card p-3 d-flex flex-row justify-content-between align-items-center';
+        node.innerHTML = `
+          <div>
+            <div class="fw-bold">${service}</div>
+            <small class="muted">Com ${barber}</small>
+          </div>
+          <div class="text-end">
+            <div class="fw-semibold">${dateStr}</div>
+            <small class="badge badge-soft rounded-pill px-2 py-1">${timeStr}</small>
+          </div>
+        `;
+        list.appendChild(node);
+      });
+
+      checkForUpcomingAppointment(future);
+    }
+
+    function checkForUpcomingAppointment(apps){
+      const now = Date.now(), in24h = now + 86_400_000;
+      const upcoming = apps.find(a=> a.timestamp>now && a.timestamp<=in24h);
+      if(upcoming){
+        const d = new Date(upcoming.timestamp);
+        const timeStr = d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+        const service = services.find(s=>s.id===upcoming.serviceName)?.name ?? 'Corte';
+        const barber = barbers.find(b=>b.id===upcoming.barberId)?.name ?? 'Barbeiro';
+        showModal('Lembrete', `Você tem **${service}** com **${barber}** hoje/amanhã às **${timeStr}**. 💈`);
+      }
+    }
+
+    function renderSubscriptionManager(){
+      const details = $('#sub-details'); const plans = $('#subscription-plans-list'); const badge = $('#sub-badge');
+      if(!details || !plans) return;
+
+      plans.innerHTML = subscriptionPlans.map(p=>`
+        <div class="col-12 col-md-6">
+          <div class="card p-4 hoverable h-100 d-flex flex-column">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="fw-bold">${p.name}</div>
+              <span class="badge badge-soft rounded-pill">${p.cuts} cortes</span>
+            </div>
+            <small class="muted mt-1">${p.description}</small>
+            <div class="fw-semibold mt-3 mb-2">R$ ${p.price.toFixed(2)}</div>
+            <button class="btn btn-outline-light mt-auto w-100" data-plan="${p.id}">Comprar Plano</button>
+          </div>
+        </div>
+      `).join('');
+      plans.querySelectorAll('[data-plan]').forEach(b=>{
+        b.addEventListener('click', ()=> purchaseSubscription(b.dataset.plan));
+      });
+
+      if(!isAuthReady){
+        details.textContent = 'Faça login para gerenciar sua assinatura.';
+        badge.textContent = 'Desconhecido';
+        return;
+      }
+      if(userSubscription?.planId){
+        const p = subscriptionPlans.find(x=>x.id===userSubscription.planId);
+        const cuts = userSubscription.cutsRemaining ?? 0;
+        const status = cuts>0 ? 'ATIVA' : 'Cortes Esgotados';
+        const color = cuts>0 ? 'bg-success' : 'bg-warning';
+        details.innerHTML = `Plano: <strong>${p?.name ?? '—'}</strong><br>Status: <span class="${color} px-2 py-1 rounded-2">${status}</span><br>Cortes restantes: <span class="fw-bold">${cuts}</span>`;
+        badge.textContent = status;
+      } else{
+        details.textContent = 'Você não possui assinatura ativa. Escolha um plano para economizar!';
+        badge.textContent = 'Sem Assinatura';
+      }
+    }
+
+    /* ================== ACTIONS ================== */
+    window.selectService = function(id){
+      selected.service = services.find(s=>s.id===id) ?? null;
+      selected.barber = selected.date = selected.time = selected.timeStr = null;
+      updateSelectedServiceUI();
+      updateSelectedBarberUI();
+      renderTimeSlots();
+    }
+    window.selectBarber = function(id){
+      if(!selected.service){ showModal('Atenção','Primeiro selecione um serviço.'); return; }
+      selected.barber = barbers.find(b=>b.id===id) ?? null;
+      selected.date = selected.time = selected.timeStr = null;
+      const inp = $('#appointment-date'); if(inp) inp.value='';
+      updateSelectedBarberUI(); renderTimeSlots();
+    }
+    window.selectTime = function(timeStr){
+      if(!selected.date || !selected.barber) return;
+      selected.timeStr = timeStr;
+      const dt = timeToDate(selected.date, timeStr);
+      selected.time = dt?.getTime() ?? null;
+      renderTimeSlots();
+    }
+
+    async function handleBooking(){
+      if(!selected.service || !selected.barber || !selected.time || !userId){
+        showModal('Erro', 'Selecione serviço, barbeiro, data e hora válidos.'); return;
+      }
+      const paymentRequired = !(userSubscription && userSubscription.cutsRemaining>0);
+      const confirmMsg = paymentRequired
+        ? `Confirmar agendamento com pagamento de R$ ${selected.service.price.toFixed(2)} na barbearia?`
+        : `Confirmar agendamento usando 1 corte da assinatura?`;
+      if(!window.confirm(confirmMsg)) return;
+
+      const appointmentData = {
+        barberId: selected.barber.id,
+        serviceName: selected.service.id,
+        timestamp: selected.time,
+        userId,
+        paymentMethod: paymentRequired ? 'On-site Payment' : 'Subscription',
+        createdAt: serverTimestamp()
+      };
+      try{
+        const ref = collection(db, getAppointmentsCollectionPath());
+        await addDoc(ref, appointmentData);
+
+        if(!paymentRequired && userSubscription){
+          const subRef = doc(db, getSubscriptionCollectionPath());
+          await updateDoc(subRef,{ cutsRemaining: (userSubscription.cutsRemaining||1)-1, lastUsed: serverTimestamp() });
         }
 
-        // Função para esconder o modal de status/mensagem
-        window.hideModal = function() {
-            document.getElementById('status-modal').classList.add('hidden');
-            document.getElementById('status-modal').classList.remove('flex');
-        }
-        
-        // Converte a hora (ex: "10:00") para um objeto Date na data selecionada.
-        function timeToDate(dateStr, timeStr) {
-            if (!dateStr || !timeStr) return null;
-            const [year, month, day] = dateStr.split('-').map(Number);
-            const [hour, minute] = timeStr.split(':').map(Number);
-            const date = new Date(year, month - 1, day, hour, minute);
-            return date;
-        }
-
-        // --- Renderização de UI ---
-
-        // Renderiza informações da barbearia
-        function renderBarbershopInfo() {
-            const logoElement = document.getElementById('barbershop-logo');
-            if (logoElement && barbershopInfo.logoUrl) {
-                logoElement.src = barbershopInfo.logoUrl;
-            }
-
-            const addressElement = document.getElementById('barbershop-address');
-            if (addressElement) {
-                addressElement.textContent = barbershopInfo.address;
-            }
-            
-            const paymentsList = document.getElementById('payment-methods-list');
-            if (paymentsList) {
-                paymentsList.innerHTML = barbershopInfo.payments.map(p => `<li>${p}</li>`).join('');
-            }
-            lucide.createIcons();
-        }
-
-        // 1. Renderiza os cartões de serviço
-        function renderServices() {
-            const list = document.getElementById('services-list');
-            if (!list) return;
-
-            list.innerHTML = services.map(s => `
-                <div class="card cursor-pointer flex items-center space-x-4 border-2 border-gray-700 hover:border-red-600 transition duration-200"
-                    onclick="selectService('${s.id}')" data-service-id="${s.id}">
-                    <i data-lucide="${s.icon}" class="w-8 h-8 text-red-600 flex-shrink-0"></i>
-                    <div>
-                        <h3 class="font-bold text-xl text-white">${s.name}</h3>
-                        <p class="text-gray-400">R$ ${s.price.toFixed(2)} (${s.duration} min)</p>
-                    </div>
-                </div>
-            `).join('');
-            lucide.createIcons();
-            updateSelectedServiceUI();
-        }
-        
-        // Atualiza o estado visual do serviço selecionado
-        function updateSelectedServiceUI() {
-            document.querySelectorAll('[data-service-id]').forEach(el => {
-                if (el.dataset.serviceId === selected.service?.id) {
-                    el.classList.add('border-red-600', 'ring-2', 'ring-red-600');
-                    el.classList.remove('border-gray-700', 'hover:border-red-600');
-                } else {
-                    el.classList.remove('border-red-600', 'ring-2', 'ring-red-600');
-                    el.classList.add('border-gray-700', 'hover:border-red-600');
-                }
-            });
-
-            const display = document.getElementById('selected-service-display');
-            const barberSection = document.getElementById('barber-selection-section');
-            if (!display || !barberSection) return;
-
-            if (selected.service) {
-                display.classList.remove('hidden');
-                document.getElementById('selected-service-details').innerHTML = `${selected.service.name} - **R$ ${selected.service.price.toFixed(2)}**`;
-                
-                // Ativa o próximo passo
-                barberSection.classList.remove('opacity-50', 'pointer-events-none');
-            } else {
-                display.classList.add('hidden');
-                barberSection.classList.add('opacity-50', 'pointer-events-none');
-            }
-        }
-
-        // 2. Renderiza os cartões de barbeiro
-        function renderBarbers() {
-            const list = document.getElementById('barbers-list');
-            if (!list) return;
-
-            list.innerHTML = barbers.map(b => `
-                <div class="card cursor-pointer flex flex-col items-center space-y-3 border-2 border-gray-700 hover:border-red-600 transition duration-200 text-center"
-                    onclick="selectBarber('${b.id}')" data-barber-id="${b.id}">
-                    <img src="${b.image}" alt="[Imagem de ${b.name}]" class="w-20 h-20 rounded-full object-cover border-4 border-gray-700">
-                    <h3 class="font-bold text-lg text-white">${b.name}</h3>
-                    <p class="text-sm text-red-400">${b.specialty}</p>
-                </div>
-            `).join('');
-            updateSelectedBarberUI();
-        }
-
-        // Atualiza o estado visual do barbeiro selecionado
-        function updateSelectedBarberUI() {
-            document.querySelectorAll('[data-barber-id]').forEach(el => {
-                if (el.dataset.barberId === selected.barber?.id) {
-                    el.classList.add('border-red-600', 'ring-2', 'ring-red-600');
-                    el.classList.remove('border-gray-700', 'hover:border-red-600');
-                } else {
-                    el.classList.remove('border-red-600', 'ring-2', 'ring-red-600');
-                    el.classList.add('border-gray-700', 'hover:border-red-600');
-                }
-            });
-
-            const display = document.getElementById('selected-barber-display');
-            const datetimeSection = document.getElementById('datetime-selection-section');
-            if (!display || !datetimeSection) return;
-
-            if (selected.barber) {
-                display.classList.remove('hidden');
-                document.getElementById('selected-barber-details').innerHTML = `${selected.barber.name} (${selected.barber.specialty})`;
-                 // Ativa o próximo passo
-                datetimeSection.classList.remove('opacity-50', 'pointer-events-none');
-            } else {
-                display.classList.add('hidden');
-                datetimeSection.classList.add('opacity-50', 'pointer-events-none');
-            }
-        }
-        
-        // 3. Renderiza os horários disponíveis
-        function renderTimeSlots() {
-            const container = document.getElementById('time-slots-container');
-            const message = document.getElementById('time-slots-message');
-            
-            // Verificação de segurança: interrompe se os elementos não existirem
-            if (!container || !message) {
-                console.warn("DOM elements for time slots not found. Skipping render.");
-                return;
-            }
-
-            container.innerHTML = '';
-            message.classList.add('hidden');
-
-            if (!selected.date) {
-                message.textContent = "Selecione uma data para ver os horários.";
-                message.classList.remove('hidden');
-                return;
-            }
-
-            // Horários de funcionamento (8:00 às 18:00, slots de 1h)
-            const openTime = 8 * 60; // 480 minutos (8:00)
-            const closeTime = 18 * 60; // 1080 minutos (18:00)
-            const slotDuration = 60; // Duração do slot em minutos (para simplificar)
-
-            // Gera todos os slots possíveis
-            let availableSlots = [];
-            for (let time = openTime; time < closeTime; time += slotDuration) {
-                const hour = Math.floor(time / 60);
-                const minute = time % 60;
-                const timeStr = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
-                availableSlots.push(timeStr);
-            }
-            
-            // Filtra os slots já agendados
-            const bookedTimes = existingAppointments
-                .filter(app => {
-                    // Nota: A data do agendamento deve ser comparada como string YYYY-MM-DD
-                    const appDate = new Date(app.timestamp).toISOString().split('T')[0];
-                    return appDate === selected.date && app.barberId === selected.barber?.id;
-                })
-                .map(app => new Date(app.timestamp).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }));
-
-            let hasAvailableSlot = false;
-
-            availableSlots.forEach(timeStr => {
-                const isBooked = bookedTimes.includes(timeStr);
-                const isSelected = timeStr === selected.timeStr;
-
-                if (!isBooked) {
-                    hasAvailableSlot = true;
-                }
-
-                container.innerHTML += `
-                    <button onclick="selectTime('${timeStr}')"
-                        class="p-2 rounded-lg font-medium transition duration-200
-                        ${isSelected ? 'bg-red-600 text-white shadow-md' : (isBooked ? 'bg-gray-700 text-gray-500 cursor-not-allowed line-through' : 'bg-gray-700 text-white hover:bg-red-700')}
-                        "
-                        ${isBooked ? 'disabled' : ''}>
-                        ${timeStr}
-                    </button>
-                `;
-            });
-
-            if (!hasAvailableSlot) {
-                message.textContent = "Nenhum horário disponível para este dia/barbeiro. Tente outra data.";
-                message.classList.remove('hidden');
-            }
-
-            updateBookingButtonState();
-        }
-
-        // Atualiza o estado do botão de agendamento
-        function updateBookingButtonState() {
-            const btn = document.getElementById('book-button');
-            if (!btn) return;
-
-            let actionText = 'Agendar Horário';
-            
-            if (userSubscription && userSubscription.cutsRemaining > 0) {
-                actionText = `Usar 1 Corte da Assinatura (${userSubscription.cutsRemaining} restantes)`;
-            } else {
-                actionText = 'Agendar (Pagamento na Loja)';
-            }
-            
-            if (selected.service && selected.barber && selected.date && selected.time) {
-                btn.disabled = false;
-                btn.textContent = actionText;
-            } else {
-                btn.disabled = true;
-                btn.textContent = 'Selecione Serviço, Barbeiro, Data e Hora';
-            }
-        }
-        
-        // Renderiza a lista de agendamentos do usuário
-        function renderUserAppointments() {
-            const list = document.getElementById('user-appointments-list');
-            const message = document.getElementById('no-appointments-message');
-            
-            // Verificação de segurança: interrompe se os elementos não existirem
-            if (!list || !message) {
-                console.warn("DOM elements for appointments not found. Skipping render.");
-                return;
-            }
-
-            list.innerHTML = '';
-            
-            if (!isAuthReady || !userId) {
-                list.innerHTML = `<p class="text-center text-gray-500 mt-4">Faça login para ver seus agendamentos.</p>`;
-                return;
-            }
-
-            // Filtra agendamentos futuros do usuário logado
-            const now = Date.now();
-            const userFutureAppointments = existingAppointments
-                .filter(app => app.userId === userId && app.timestamp > now)
-                .sort((a, b) => a.timestamp - b.timestamp);
-
-            if (userFutureAppointments.length === 0) {
-                message.classList.remove('hidden');
-                return;
-            }
-
-            message.classList.add('hidden');
-            
-            userFutureAppointments.forEach(app => {
-                const date = new Date(app.timestamp);
-                const dateStr = date.toLocaleDateString('pt-BR');
-                const timeStr = date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-                const barber = barbers.find(b => b.id === app.barberId)?.name || app.barberId;
-                const service = services.find(s => s.id === app.serviceName)?.name || app.serviceName;
-
-                list.innerHTML += `
-                    <div class="card flex justify-between items-center p-4">
-                        <div>
-                            <p class="text-xl font-bold text-red-500">${service}</p>
-                            <p class="text-gray-300">Com ${barber}</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-lg font-semibold text-white">${dateStr}</p>
-                            <p class="text-red-400 text-sm">${timeStr}</p>
-                        </div>
-                    </div>
-                `;
-            });
-            checkForUpcomingAppointment(userFutureAppointments);
-        }
-
-        // --- Alerta de Próximo Agendamento ---
-        function checkForUpcomingAppointment(appointments) {
-            const now = Date.now();
-            // Próximas 24 horas (86,400,000 milissegundos)
-            const tomorrow = now + 86400000; 
-
-            const upcoming = appointments.find(app => app.timestamp > now && app.timestamp <= tomorrow);
-
-            if (upcoming) {
-                const date = new Date(upcoming.timestamp);
-                const timeStr = date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-                const service = services.find(s => s.id === upcoming.serviceName)?.name || "Corte";
-                const barber = barbers.find(b => b.id === upcoming.barberId)?.name || "Barbeiro";
-
-                showModal(
-                    'Lembrete de Agendamento!',
-                    `Você tem um agendamento de **${service}** com **${barber}** hoje/amanhã às **${timeStr}**. Não se atrase! 💈`
-                );
-            }
-        }
-
-        // --- Gerenciamento de Assinaturas (UI) ---
-        function renderSubscriptionManager() {
-            const detailsElement = document.getElementById('sub-details');
-            const plansList = document.getElementById('subscription-plans-list');
-            if (!detailsElement || !plansList) return;
-            
-            plansList.innerHTML = subscriptionPlans.map(plan => `
-                <div class="card p-4 border-2 border-gray-700">
-                    <h3 class="font-bold text-xl text-red-500">${plan.name}</h3>
-                    <p class="text-gray-400">${plan.description}</p>
-                    <p class="text-lg font-semibold text-white mt-2">R$ ${plan.price.toFixed(2)}</p>
-                    <button onclick="purchaseSubscription('${plan.id}')" class="btn-primary mt-3 w-full text-sm">Comprar Plano</button>
-                </div>
-            `).join('');
-
-
-            if (!isAuthReady) {
-                detailsElement.textContent = 'Faça login para gerenciar sua assinatura.';
-                return;
-            }
-
-            if (userSubscription && userSubscription.planId) {
-                const planDetails = subscriptionPlans.find(p => p.id === userSubscription.planId);
-                const cuts = userSubscription.cutsRemaining;
-                const status = cuts > 0 ? 'ATIVA' : 'Cortes Esgotados';
-                const statusColor = cuts > 0 ? 'text-green-400' : 'text-yellow-400';
-                
-                detailsElement.innerHTML = `
-                    **Plano:** ${planDetails?.name || 'Desconhecido'} <br>
-                    **Status:** <span class="${statusColor}">${status}</span> <br>
-                    **Cortes Restantes:** <span class="text-white font-bold text-xl">${cuts}</span>
-                `;
-            } else {
-                detailsElement.innerHTML = 'Você não possui uma assinatura ativa. Escolha um plano abaixo para começar a economizar!';
-            }
-        }
-        
-        // Simulação de compra de assinatura
-        window.purchaseSubscription = async function(planId) {
-            if (!userId) {
-                showModal('Acesso Negado', 'Por favor, faça login para comprar uma assinatura.');
-                return;
-            }
-            
-            const plan = subscriptionPlans.find(p => p.id === planId);
-
-            // Simulação de confirmação de pagamento
-            if (!window.confirm(`Confirmar a compra do ${plan.name} por R$ ${plan.price.toFixed(2)}? (Simulação)`)) {
-                return;
-            }
-
-            try {
-                const docRef = doc(db, getSubscriptionCollectionPath());
-                await setDoc(docRef, {
-                    planId: plan.id,
-                    cutsRemaining: plan.cuts,
-                    status: 'Active',
-                    lastUpdated: serverTimestamp(),
-                    purchaseDate: serverTimestamp()
-                });
-
-                showModal('Sucesso!', `Assinatura **${plan.name}** comprada com sucesso! Você tem **${plan.cuts}** cortes disponíveis.`);
-
-            } catch (error) {
-                console.error("Erro ao comprar assinatura:", error);
-                showModal('Erro na Compra', 'Não foi possível registrar sua assinatura.');
-            }
-        }
-
-
-        // --- Lógica de Seleção ---
-
-        // Função para selecionar um serviço
-        window.selectService = function(serviceId) {
-            // Nota: Manteve-se a seleção de serviço para flexibilidade, mas o agendamento de corte usará a assinatura
-            selected.service = services.find(s => s.id === serviceId);
-            selected.barber = null;
-            selected.date = null;
-            selected.time = null;
-            selected.timeStr = null;
-            updateSelectedServiceUI();
-            updateSelectedBarberUI();
-            renderTimeSlots(); // Limpa os slots
-            updateBookingButtonState();
-        }
-
-        // Função para selecionar um barbeiro
-        window.selectBarber = function(barberId) {
-            if (!selected.service) {
-                showModal('Atenção', 'Primeiro, selecione um serviço!');
-                return;
-            }
-            selected.barber = barbers.find(b => b.id === barberId);
-            selected.date = null; // Limpa a data para forçar a revalidação
-            selected.time = null;
-            selected.timeStr = null;
-            const appointmentDateInput = document.getElementById('appointment-date');
-            if (appointmentDateInput) {
-                appointmentDateInput.value = ''; // Limpa o input
-            }
-            updateSelectedBarberUI();
-            renderTimeSlots(); // Limpa/Reseta os slots
-            updateBookingButtonState();
-        }
-
-        // Função para selecionar a hora
-        window.selectTime = function(timeStr) {
-            if (!selected.date || !selected.barber) return;
-            
-            selected.timeStr = timeStr;
-            const appointmentDateObj = timeToDate(selected.date, timeStr);
-            selected.time = appointmentDateObj ? appointmentDateObj.getTime() : null;
-            
-            renderTimeSlots(); // Redesenha para destacar o horário selecionado
-            updateBookingButtonState();
-        }
-
-        // Listener para mudança de data
-        const appointmentDateInput = document.getElementById('appointment-date');
-        if (appointmentDateInput) {
-            appointmentDateInput.addEventListener('change', (e) => {
-                const newDate = e.target.value;
-                if (newDate) {
-                    selected.date = newDate;
-                    selected.time = null;
-                    selected.timeStr = null;
-                    renderTimeSlots();
-                }
-            });
-        }
-
-
-        // --- Lógica de Agendamento (Firestore) ---
-
-        async function handleBooking() {
-            if (!selected.service || !selected.barber || !selected.time || !userId) {
-                showModal('Erro', 'Por favor, selecione um serviço, barbeiro, data e hora válidos.');
-                return;
-            }
-
-            const appointmentDateObj = new Date(selected.time);
-            let paymentRequired = false;
-            let successMessage = '';
-            
-            // 1. Lógica de Assinatura
-            if (userSubscription && userSubscription.cutsRemaining > 0) {
-                // Usar corte da assinatura
-                successMessage = `Seu agendamento de **${selected.service.name}** foi confirmado! 
-                                  Um corte foi deduzido da sua assinatura.`;
-            } else {
-                // Não tem assinatura ou cortes restantes = Requer pagamento (simulação)
-                paymentRequired = true;
-                successMessage = `Seu agendamento de **${selected.service.name}** foi reservado. 
-                                  O pagamento de **R$ ${selected.service.price.toFixed(2)}** será feito na barbearia.`;
-            }
-
-            // Confirmação (Simula a confirmação real com o método de pagamento/assinatura)
-            if (!window.confirm(paymentRequired ? `Confirmar agendamento com pagamento na barbearia?` : `Confirmar agendamento usando 1 corte da sua assinatura?`)) {
-                return;
-            }
-            
-            // 2. Criação do Agendamento
-            const appointmentData = {
-                barberId: selected.barber.id,
-                serviceName: selected.service.id,
-                timestamp: selected.time,
-                userId: userId,
-                paymentMethod: paymentRequired ? 'On-site Payment' : 'Subscription',
-                createdAt: serverTimestamp() 
-            };
-
-            try {
-                // Adiciona o agendamento
-                const appointmentsRef = collection(db, getAppointmentsCollectionPath());
-                await addDoc(appointmentsRef, appointmentData);
-
-                // 3. Atualiza Assinatura (se usada)
-                if (!paymentRequired && userSubscription) {
-                    const subDocRef = doc(db, getSubscriptionCollectionPath());
-                    await updateDoc(subDocRef, {
-                        cutsRemaining: userSubscription.cutsRemaining - 1,
-                        lastUsed: serverTimestamp()
-                    });
-                }
-                
-                showModal('Sucesso!', successMessage);
-                
-                // Limpa a seleção após o sucesso
-                selected.time = null;
-                selected.timeStr = null;
-                updateBookingButtonState();
-
-            } catch (error) {
-                console.error("Erro ao agendar:", error);
-                showModal('Erro no Agendamento', 'Não foi possível salvar seu agendamento. Tente novamente.');
-            }
-        }
-
-
-        // --- FIREBASE E AUTENTICAÇÃO ---
-
-        function getAppointmentsCollectionPath() {
-            // Caminho para dados públicos de agendamentos: /artifacts/{appId}/public/data/{your_collection_name}
-            return `artifacts/${appId}/public/data/barbershop_appointments`;
-        }
-        
-        function getSubscriptionCollectionPath(docId = 'current') {
-            // Caminho para dados privados do usuário: /artifacts/{appId}/users/{userId}/subscriptions/{documentId}
-            return `artifacts/${appId}/users/${userId}/subscriptions/${docId}`;
-        }
-
-
-        // 1. Inicializa o Firebase
-        function initializeFirebase() {
-            try {
-                if (Object.keys(firebaseConfig).length > 0) {
-                    app = initializeApp(firebaseConfig);
-                    db = getFirestore(app);
-                    auth = getAuth(app);
-                    setLogLevel('debug'); // Ativa logs de debug do Firestore
-                    return true;
-                } else {
-                    console.error("Configuração do Firebase não encontrada.");
-                    const userDisplay = document.getElementById('user-display');
-                    if (userDisplay) userDisplay.textContent = 'Erro de Config: Sem Firebase';
-                    return false;
-                }
-            } catch (error) {
-                console.error("Erro ao inicializar Firebase:", error);
-                const userDisplay = document.getElementById('user-display');
-                if (userDisplay) userDisplay.textContent = 'Erro de Config: Firebase';
-                return false;
-            }
-        }
-
-        // 2. Realiza a Autenticação (Mantida Anônima)
-        async function authenticateUser() {
-            if (!auth) return;
-
-            if (initialAuthToken) {
-                try {
-                    await signInWithCustomToken(auth, initialAuthToken);
-                } catch (error) {
-                    await signInAnonymously(auth);
-                }
-            } else {
-                await signInAnonymously(auth);
-            }
-        }
-        
-        // 3. Listener de Estado de Autenticação
-        function setupAuthListener() {
-            onAuthStateChanged(auth, (user) => {
-                isAuthReady = true;
-                if (user) {
-                    userId = user.uid;
-                    const userDisplay = document.getElementById('user-display');
-                    if (userDisplay) userDisplay.innerHTML = `Usuário ID: <span class="font-mono text-red-400">${userId.substring(0, 8)}...</span>`;
-                    // Inicia os listeners de dados após a autenticação
-                    setupFirestoreListener(); // Agendamentos públicos
-                    setupSubscriptionListener(); // Assinatura privada
-                } else {
-                    authenticateUser();
-                }
-                renderUserAppointments();
-                renderSubscriptionManager();
-            });
-        }
-        
-        // 4a. Listener de Agendamentos (Real-time - Dados Públicos)
-        function setupFirestoreListener() {
-            if (!db || !userId) return;
-
-            const appointmentsRef = collection(db, getAppointmentsCollectionPath());
-            const q = appointmentsRef; 
-
-            onSnapshot(q, (snapshot) => {
-                existingAppointments = snapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data(),
-                    timestamp: doc.data().timestamp?.toMillis ? doc.data().timestamp.toMillis() : (doc.data().timestamp || 0)
-                }));
-                
-                console.log("Agendamentos carregados/atualizados:", existingAppointments.length);
-                renderTimeSlots();
-                renderUserAppointments();
-
-            }, (error) => {
-                console.error("Erro ao ouvir agendamentos:", error);
-                // Não mostra modal para não poluir, apenas loga
-            });
-        }
-        
-        // 4b. Listener de Assinatura (Real-time - Dados Privados)
-        function setupSubscriptionListener() {
-            if (!db || !userId) return;
-            
-            const subDocRef = doc(db, getSubscriptionCollectionPath());
-
-            onSnapshot(subDocRef, (docSnap) => {
-                if (docSnap.exists()) {
-                    userSubscription = {
-                        id: docSnap.id,
-                        ...docSnap.data()
-                    };
-                    console.log("Status da Assinatura carregado:", userSubscription);
-                } else {
-                    userSubscription = null;
-                    console.log("Nenhuma assinatura encontrada para o usuário.");
-                }
-                renderSubscriptionManager();
-                updateBookingButtonState();
-            }, (error) => {
-                console.error("Erro ao ouvir assinatura:", error);
-            });
-        }
-        
-        // Simulação de Logout (apenas para fins de demonstração, loga anonimamente em seguida)
-        window.handleLogout = async function() {
-            if (auth) {
-                await signOut(auth);
-                showModal('Logout', 'Sessão encerrada. Você foi reconectado anonimamente para continuar o agendamento.');
-            }
-        }
-
-        // --- INICIALIZAÇÃO GERAL ---
-        document.addEventListener('DOMContentLoaded', () => {
-            if (initializeFirebase()) {
-                authenticateUser();
-                setupAuthListener();
-            }
-
-            // Renderiza dados estáticos
-            renderBarbershopInfo();
-            renderServices();
-            renderBarbers();
+        toast('Agendamento confirmado!');
+        showModal('Sucesso', paymentRequired
+          ? `Reserva feita: <strong>${selected.service.name}</strong>. Pague <strong>na loja</strong>.`
+          : `Reserva feita: <strong>${selected.service.name}</strong>. 1 corte deduzido da assinatura.`);
+
+        selected.time = selected.timeStr = null;
+        updateBookingButtonState();
+      }catch(e){
+        console.error(e);
+        showModal('Erro','Não foi possível salvar seu agendamento. Tente novamente.');
+      }
+    }
+
+    async function purchaseSubscription(planId){
+      if(!userId){ showModal('Acesso negado','Faça login para comprar uma assinatura.'); return; }
+      const plan = subscriptionPlans.find(p=>p.id===planId);
+      if(!plan) return;
+      if(!window.confirm(`Confirmar compra do ${plan.name} por R$ ${plan.price.toFixed(2)}? (simulação)`)) return;
+
+      try{
+        const subDoc = doc(db, getSubscriptionCollectionPath());
+        await setDoc(subDoc, {
+          planId: plan.id,
+          cutsRemaining: plan.cuts,
+          status:'Active',
+          lastUpdated: serverTimestamp(),
+          purchaseDate: serverTimestamp()
         });
+        toast('Assinatura ativada!');
+        showModal('Sucesso', `Plano <strong>${plan.name}</strong> comprado. Você tem <strong>${plan.cuts}</strong> cortes.`);
+      }catch(e){
+        console.error(e);
+        showModal('Erro','Falha ao registrar sua assinatura.');
+      }
+    }
 
-        // Define a data mínima como hoje
-        const today = new Date();
-        const yyyy = today.getFullYear();
-        const mm = String(today.getMonth() + 1).padStart(2, '0'); // Mês começa em 0
-        const dd = String(today.getDate()).padStart(2, '0');
-        const appointmentDateInputMin = document.getElementById('appointment-date');
-        if (appointmentDateInputMin) {
-            appointmentDateInputMin.min = `${yyyy}-${mm}-${dd}`;
+    /* ================== FIREBASE FLOW ================== */
+    function initializeFirebase(){
+      try{
+        if(Object.keys(firebaseConfig).length===0) throw new Error('Firebase config ausente');
+        app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+        auth = getAuth(app);
+        setLogLevel('debug');
+        return true;
+      }catch(e){
+        console.error(e);
+        $('#user-display').textContent = 'Erro de Config: Firebase.';
+        return false;
+      }
+    }
+
+    async function authenticateUser(){
+      if(!auth) return;
+      try{
+        if(initialAuthToken) await signInWithCustomToken(auth, initialAuthToken);
+        else await signInAnonymously(auth);
+      }catch{ await signInAnonymously(auth); }
+    }
+
+    function setupAuthListener(){
+      onAuthStateChanged(auth, (user)=>{
+        isAuthReady = true;
+        if(user){
+          userId = user.uid;
+          $('#user-display').innerHTML = `Usuário <span class="font-monospace badge badge-soft rounded-pill px-2">${userId.slice(0,8)}…</span>`;
+          setupFirestoreListener();
+          setupSubscriptionListener();
+        }else{
+          authenticateUser();
         }
+        renderUserAppointments();
+        renderSubscriptionManager();
+      });
+    }
 
-    </script>
+    function setupFirestoreListener(){
+      if(!db) return;
+      const ref = collection(db, getAppointmentsCollectionPath());
+      onSnapshot(ref, (snap)=>{
+        existingAppointments = snap.docs.map(d=>({
+          id:d.id, ...d.data(),
+          timestamp: d.data().timestamp?.toMillis ? d.data().timestamp.toMillis() : (d.data().timestamp||0)
+        }));
+        renderTimeSlots();
+        renderUserAppointments();
+      }, (err)=> console.error('Erro listener appointments', err));
+    }
 
+    function setupSubscriptionListener(){
+      if(!db || !userId) return;
+      const subRef = doc(db, getSubscriptionCollectionPath());
+      onSnapshot(subRef, (docSnap)=>{
+        userSubscription = docSnap.exists() ? { id: docSnap.id, ...docSnap.data() } : null;
+        renderSubscriptionManager();
+        updateBookingButtonState();
+      }, (err)=> console.error('Erro listener subscription', err));
+    }
+
+    /* ================== INIT ================== */
+    document.addEventListener('DOMContentLoaded', ()=>{
+      statusModalInstance = new bootstrap.Modal('#statusModal');
+      toastInstance = new bootstrap.Toast('#toast', { delay: 2200 });
+
+      // icons
+      lucide.createIcons();
+
+      // logout
+      $('#logout-btn')?.addEventListener('click', async ()=>{
+        if(auth){ await signOut(auth); toast('Sessão reiniciada anonimamente.'); }
+      });
+
+      // date min + change
+      const dateInput = $('#appointment-date');
+      if(dateInput){
+        setMinToday(dateInput);
+        dateInput.addEventListener('change', (e)=>{
+          const v = e.target.value;
+          if(v){
+            selected.date = v;
+            selected.time = null; selected.timeStr = null;
+            renderTimeSlots();
+          }
+        });
+      }
+
+      // Firebase boot
+      if(initializeFirebase()){ authenticateUser(); setupAuthListener(); }
+
+      // Static
+      renderBarbershopInfo();
+      renderServices();
+      renderBarbers();
+
+      // Book
+      $('#book-button')?.addEventListener('click', handleBooking);
+    });
+  </script>
 </body>
 </html>
